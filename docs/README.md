@@ -1,6 +1,6 @@
 # SwitchBox
 
-<img src="assets/img/SwitchBox.png" style="width:25%"/>
+<img src="assets/img/SwitchBox.png" width="25%"/>
 
 SwitchBox is a software-based MIDI translator that can change the channel of incoming MIDI messages in real time. Quickly change instrument voices on a sampler or software synth with the touch of a button. Re-route as many instruments as you like. SwitchBox is designed to be easy to set up and simple to use, so you can get back to making music. 
 
