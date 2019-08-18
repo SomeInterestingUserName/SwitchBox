@@ -1,5 +1,5 @@
 theme: jekyll-theme-cayman
 show_downloads: true
 github:
-  macos_url: https://github.com/SomeInterestingUserName/SwitchBox/releases/download/1.0/SwitchBox_1_0_macos.zip
-  linux_url: https://github.com/SomeInterestingUserName/SwitchBox/releases/download/1.0/SwitchBox_1_0_src.tar.gz
+  macos_url: https://github.com/SomeInterestingUserName/SwitchBox/releases/download/1.0.1/SwitchBox_1_0_1_macos.zip
+  linux_url: https://github.com/SomeInterestingUserName/SwitchBox/releases/download/1.0.1/SwitchBox_1_0_1_src.tar.gz

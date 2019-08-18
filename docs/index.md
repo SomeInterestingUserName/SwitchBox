@@ -137,6 +137,10 @@ SwitchBox will automatically save any settings you change, the moment you change
   * Add a user manual
   * Add error messages
   * Move code to GitHub
+* 1.0.1 (18 Aug. 2019)
+  * Change where SwitchBox stores files
+  * Tweak logging behavior on startup
+  * Update version numbering system
 
 ### 0.2 "Brisbane"
 * 0.21b (22 Apr. 2019)

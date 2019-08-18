@@ -11,6 +11,8 @@ Release Notes:
         Add more comments to document code better
         Add a help menu 
         Add error messages that are displayed when something's not right
+        
+        1.0.1: Fix startup and file handling issues on macOS
 
 0.2b "Brisbane": Adjust save file characteristics, naming logic, and 
     added "About" dialog. Removed file menus for now
@@ -27,7 +29,7 @@ from tkinter import *
 import tkinter.ttk as ttk 
 import tkinter
 from tkinter import messagebox
-from os import popen,path,getcwd
+from os import popen,path,getcwd,mkdir
 import logging
 from lxml import etree
 import webbrowser
@@ -44,8 +46,20 @@ GREEN = '#035211'
 YELLOW = '#FFB300'
 LIGHTGREEN = '#07D720'
 
+# Location of user's home path
+PATH_HOME = path.expanduser('~')
+
+# Where SwitchBox stores its temporary files
+if isaMac:
+    PATH_SWITCHBOXFILES = PATH_HOME + '/Library/Application Support/SwitchBox'
+else:
+    PATH_SWITCHBOXFILES = PATH_HOME + '/SwitchBox'
+
+if not path.isdir(PATH_SWITCHBOXFILES):
+    mkdir(PATH_SWITCHBOXFILES)
+    
 # Location of persistent settings file
-PATH_CURRENT_XML = 'current.xml'
+PATH_CURRENT_XML = PATH_SWITCHBOXFILES + '/current.xml'
 
 # Location of user manual
 PATH_MANUAL = 'assets/SwitchBoxManual.pdf'
@@ -53,8 +67,9 @@ PATH_MANUAL = 'assets/SwitchBoxManual.pdf'
 # Version strings for fancy formatting
 VER_MAJOR = '1'
 VER_MINOR = '0'
+VER_PATCH = '1'
 VER_NAME = 'Canberra'
-VER_STRING = '{0}.{1}'.format(VER_MAJOR, VER_MINOR)
+VER_STRING = '{0}.{1}.{2}'.format(VER_MAJOR, VER_MINOR, VER_PATCH)
 
 # Columns per row
 NUM_COLS = 9
@@ -78,19 +93,13 @@ INTERVAL_CHECKNEW_MS = 500
 LOG_LEVEL = logging.WARN
 
 # Name of log file. If you want to log to a file, create a blank file
-# with this name in the working directory.
-LOG_FILE = 'switcheroo.log'
+# with this name in PATH_SWITCHBOXFILES
+# e.g. ~/Library/Application Support/SwitchBox/ on macOS,
+# ~/SwitchBox/ on other platforms
+# By default, SwitchBox logs to stdout if the file doesn't exist.
+LOG_FILE = PATH_SWITCHBOXFILES + '/switcheroo.log'
+
 LOG_FORMAT = '%(asctime)s %(levelname)s in module %(module)s:%(lineno)d: %(message)s'
-
-# If the log file exists, log to that. Otherwise, print to stdout to 
-# prevent logfile spam
-if path.isfile(LOG_FILE) :
-    logging.basicConfig(filename=LOG_FILE, level=LOG_LEVEL, 
-                        format=LOG_FORMAT)
-else:
-    logging.basicConfig(level=LOG_LEVEL, format=LOG_FORMAT)
-    logging.warning('Logfile not found, logging to console instead. If you would like to log to a file, create a file named "{}" in the working directory.'.format(LOG_FILE))
-
 
 """A container for ColumnElements and MIDI ports
 
@@ -1396,9 +1405,20 @@ class App(ttk.Frame):
 """As per the definition name, this is the main routine.
 """
 def main():
+    # Set up logging.
+    # If the log file exists, log to that. Otherwise, print to stdout to 
+    # prevent logfile spam
+    if path.isfile(LOG_FILE) :
+        logging.basicConfig(filename=LOG_FILE, level=LOG_LEVEL, 
+                            format=LOG_FORMAT)
+    else:
+        logging.basicConfig(level=LOG_LEVEL, format=LOG_FORMAT)
+        logging.warning('Logfile not found, logging to console instead. If you would like to log to a file, create a file named "{}" in the working directory.'.format(LOG_FILE))
+        
     root = Tk()
     root.resizable(False, False)
     app = App(root)
+    
     logging.info("G'day!")
     app.master.title('SwitchBox')
     root.focus()
